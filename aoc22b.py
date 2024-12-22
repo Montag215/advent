@@ -34,36 +34,41 @@ for i in range(len(nums)):
     for j in range(len(nums[i])):
         nums[i][j] = int(str(nums[i][j])[-1])
 
-dnums = copy.deepcopy(nums)
+d = copy.deepcopy(nums)
 
 for i in range(len(nums)):
     for j in range(len(nums[i])-1):
-        dnums[i][j] = nums[i][j+1] - nums[i][j]
+        d[i][j] = nums[i][j+1] - nums[i][j]
 
 delta = []
-#for i in range(5):
-#    for j in range(5):
-#        for k in range(5):
-#            for l in range(5):
-#                delta.append([i,j,k,l])
+valid = []
 
 for i in range(19):
+    a = []
     for j in range(19):
+        b = []
         for k in range(19):
-            for l in range(19):
-                delta.append([i-9,j-9,k-9,l-9])
+            b.append([0]*19)
+        a.append(b)
+    delta.append(a)
 
-for d in delta:
-    if abs(d[0]+d[1]+d[2]+d[3])>9 or abs(d[1]+d[2]+d[3])>9 or abs(d[0]+d[1]+d[2])>9 or abs(d[0]+d[1])>9 or abs(d[1]+d[2])>9 or abs(d[2]+d[3])>9:
-        continue
-    total = 0
-    for i in range(len(nums)):
-        for j in range(len(nums[i])-4):
-            if d[0]==dnums[i][j] and d[1]==dnums[i][j+1] and d[2]==dnums[i][j+2] and d[3]==dnums[i][j+3]:
-                total += nums[i][j+4]
-                break
-    count = max(count,total)
+valid = copy.deepcopy(delta)
 
+for i in range(len(nums)):
+    for j in range(len(nums[i])-4):
+        if not valid[d[i][j]+9][d[i][j+1]+9][d[i][j+2]+9][d[i][j+3]+9]:
+            valid[d[i][j]+9][d[i][j+1]+9][d[i][j+2]+9][d[i][j+3]+9] = 1
+            delta[d[i][j]+9][d[i][j+1]+9][d[i][j+2]+9][d[i][j+3]+9] += nums[i][j+4]
+    for ii in range(19):
+        for jj in range(19):
+            for kk in range(19):
+                for ll in range(19):
+                    valid[ii][jj][kk][ll] = 0
 
+for ii in range(19):
+    for jj in range(19):
+        for kk in range(19):
+            for ll in range(19):
+                count = max(count,delta[ii][jj][kk][ll])
 
 print(count)
